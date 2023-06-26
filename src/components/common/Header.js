@@ -1,7 +1,7 @@
 import { Link, NavLink } from 'react-router-dom';
 
 function Header() {
-	const active = { color: 'aqua' };
+	const active = 'on';
 	return (
 		<header>
 			<h1>
@@ -10,32 +10,32 @@ function Header() {
 
 			<ul id='gnb'>
 				<li>
-					<NavLink to='/department' activeStyle={active}>
+					<NavLink to='/department' activeClassName={active}>
 						Department
 					</NavLink>
 				</li>
 				<li>
-					<NavLink to='/community' activeStyle={active}>
+					<NavLink to='/community' activeClassName={active}>
 						Community
 					</NavLink>
 				</li>
 				<li>
-					<NavLink to='/gallery' activeStyle={active}>
+					<NavLink to='/gallery' activeClassName={active}>
 						Gallery
 					</NavLink>
 				</li>
 				<li>
-					<NavLink to='/youtube' activeStyle={active}>
+					<NavLink to='/youtube' activeClassName={active}>
 						Youtube
 					</NavLink>
 				</li>
 				<li>
-					<NavLink to='/contact' activeStyle={active}>
+					<NavLink to='/contact' activeClassName={active}>
 						Contact
 					</NavLink>
 				</li>
 				<li>
-					<NavLink to='/member' activeStyle={active}>
+					<NavLink to='/member' activeClassName={active}>
 						Member
 					</NavLink>
 				</li>
