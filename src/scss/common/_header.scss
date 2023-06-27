@@ -30,4 +30,39 @@ header {
 			}
 		}
 	}
+
+	.fa-bars {
+		display: none;
+		color: #333;
+		font-size: 20px;
+	}
+}
+
+header.main {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: transparent;
+	z-index: 2;
+	h1 a {
+		color: #fff;
+	}
+	#gnb li a {
+		color: #fff;
+	}
+	.fa-bars {
+		color: #fff;
+	}
+}
+
+@media screen and (max-width: $tablet) {
+	header {
+		#gnb {
+			display: none;
+		}
+
+		.fa-bars {
+			display: block;
+		}
+	}
 }
