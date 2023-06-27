@@ -1,5 +1,4 @@
-import { Route } from 'react-router-dom';
-
+import { Route, Switch } from 'react-router-dom';
 //common
 import Footer from './components/common/Footer';
 import Header from './components/common/Header';
@@ -24,15 +23,20 @@ import './scss/style.scss';
 function App() {
 	return (
 		<>
-			<Header />
+			<Switch>
+				<Route exact path='/'>
+					<Header type={'main'} />
+					<Visual />
+					<News />
+					<Pics />
+					<Vids />
+					<Banner />
+				</Route>
 
-			<Route exact path='/'>
-				<Visual />
-				<News />
-				<Pics />
-				<Vids />
-				<Banner />
-			</Route>
+				<Route path='/'>
+					<Header type={'sub'} />
+				</Route>
+			</Switch>
 
 			<Route path='/department'>
 				<Department />

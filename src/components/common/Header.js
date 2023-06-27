@@ -1,9 +1,9 @@
 import { Link, NavLink } from 'react-router-dom';
 
-function Header() {
+function Header({ type }) {
 	const active = 'on';
 	return (
-		<header>
+		<header className={type}>
 			<h1>
 				<Link to='/'>LOGO</Link>
 			</h1>
