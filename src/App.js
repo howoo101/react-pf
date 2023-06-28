@@ -1,14 +1,10 @@
 import { Route, Switch } from 'react-router-dom';
+
 //common
 import Footer from './components/common/Footer';
 import Header from './components/common/Header';
 
 //main
-import Visual from './components/main/Visual';
-import News from './components/main/News';
-import Pics from './components/main/Pics';
-import Vids from './components/main/Vids';
-import Banner from './components/main/Banner';
 
 //sub
 import Community from './components/sub/Community';
@@ -19,49 +15,22 @@ import Member from './components/sub/Member';
 import Youtube from './components/sub/Youtube';
 
 import './scss/style.scss';
+import Main from './components/main/Main';
 
 function App() {
 	return (
 		<>
 			<Switch>
-				<Route exact path='/'>
-					<Header type={'main'} />
-					<Visual />
-					<News />
-					<Pics />
-					<Vids />
-					<Banner />
-				</Route>
-
-				<Route path='/'>
-					<Header type={'sub'} />
-				</Route>
+				<Route exact path='/' component={Main} />
+				<Route path='/' render={() => <Header type={'sub'} />} />
 			</Switch>
 
-			<Route path='/department'>
-				<Department />
-			</Route>
-
-			<Route path='/community'>
-				<Community />
-			</Route>
-
-			<Route path='/gallery'>
-				<Gallery />
-			</Route>
-
-			<Route path='/youtube'>
-				<Youtube />
-			</Route>
-
-			<Route path='/contact'>
-				<Contact />
-			</Route>
-
-			<Route path='/member'>
-				<Member />
-			</Route>
-
+			<Route path='/department' component={Department} />
+			<Route path='/community' component={Community} />
+			<Route path='/gallery' component={Gallery} />
+			<Route path='/youtube' component={Youtube} />
+			<Route path='/contact' component={Contact} />
+			<Route path='/member' component={Member} />
 			<Footer />
 		</>
 	);
