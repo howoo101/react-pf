@@ -23,19 +23,19 @@ function Youtube() {
 			{Videoes.map((video, idx) => {
 				const data = video.snippet;
 				const thumbnailUrl = data.thumbnails.standard.url;
-				const title =
-					data.title.length > 50 ? data.title.substr(0, 50) + '...' : data.title;
-				const description =
-					data.description.length > 200
-						? data.description.substr(0, 200) + '...'
-						: data.description;
+				const title = data.title.length > 50 ? data.title.substr(0, 50) + '...' : data.title;
+				const description = data.description.length > 200 ? data.description.substr(0, 200) + '...' : data.description;
 
 				return (
 					<article key={idx}>
-						<img src={thumbnailUrl}></img>
 						<h2>{title}</h2>
-						<p>{description}</p>
-						<span>{data.publishedAt.split('T')[0]}</span>
+						<div className='txt'>
+							<p>{description}</p>
+							<span>{data.publishedAt.split('T')[0]}</span>
+						</div>
+						<div className='pic'>
+							<img src={thumbnailUrl} alt={thumbnailUrl} />
+						</div>
 					</article>
 				);
 			})}

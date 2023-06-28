@@ -1,5 +1,5 @@
 import Layout from '../common/Layout';
-import axios, { Axios } from 'axios';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 function Department() {
