@@ -5,6 +5,7 @@ import News from './News';
 import Pics from './Pics';
 import Vids from './Vids';
 import Banner from './Banner';
+import Btns from './Btns';
 
 function Main() {
 	return (
@@ -15,6 +16,7 @@ function Main() {
 			<Pics />
 			<Vids />
 			<Banner />
+			<Btns />
 		</main>
 	);
 }
