@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import Anime from '../../asset/anime';
-function Btns({ setScrolled }) {
+function Btns({ setScroll, setPos }) {
 	const btnRef = useRef(null);
 
-	let pos = useRef([]);
+	const pos = useRef([]);
 	const [num, setNum] = useState(0);
 	//myScroll공통 클래스가 있는 섹션을 모두 찾아서 해당 요소의 세로 위치값을 참조객체에 배열로 담아주는 함수
 	const getPos = () => {
@@ -11,6 +11,7 @@ function Btns({ setScrolled }) {
 		const secs = btnRef.current.parentElement.querySelectorAll('.myScroll');
 		for (const sec of secs) pos.current.push(sec.offsetTop);
 		setNum(pos.current.length);
+		setPos(pos.current);
 	};
 
 	const activation = () => {
@@ -19,7 +20,7 @@ function Btns({ setScrolled }) {
 		const btns = btnRef.current.children;
 		const boxes = btnRef.current.parentElement.querySelectorAll('.myScroll');
 
-		setScrolled(scroll);
+		setScroll(scroll);
 
 		pos.current.forEach((pos, idx) => {
 			if (scroll >= pos + base) {

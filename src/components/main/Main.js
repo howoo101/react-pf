@@ -8,16 +8,18 @@ import Banner from './Banner';
 import Btns from './Btns';
 
 function Main() {
-	const [scroll, setScrolled] = useState(0);
+	const [scroll, setScroll] = useState(0);
+	const [pos, setPos] = useState([]);
+
 	return (
 		<main>
 			<Header type={'main'} />
 			<Visual />
 			<News />
-			<Pics scroll={scroll} />
+			<Pics scroll={scroll} pos={pos[2]} />
 			<Vids />
 			<Banner />
-			<Btns setScrolled={setScrolled} />
+			<Btns setScroll={setScroll} setPos={setPos} />
 		</main>
 	);
 }

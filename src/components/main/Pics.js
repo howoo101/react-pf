@@ -1,8 +1,7 @@
-function Pics(scroll) {
-	console.log(scroll);
+function Pics({ scroll, pos }) {
 	return (
 		<section id='pics' className='myScroll'>
-			Pics
+			<h1 style={{ transform: `translateX(${scroll - pos}px)` }}>FLICKR</h1>
 		</section>
 	);
 }
