@@ -13,16 +13,32 @@ function Btns() {
 		setNum(pos.current.length);
 	};
 
+	const activation = () => {
+		const base = -window.innerHeight / 2;
+		const scroll = window.scrollY;
+		const btns = btnRef.current.children;
+		const boxes = btnRef.current.parentElement.querySelectorAll('.myScroll');
+
+		pos.current.forEach((pos, idx) => {
+			if (scroll >= pos + base) {
+				for (const btn of btns) btn.classList.remove('on');
+				for (const box of boxes) box.classList.remove('on');
+				btns[idx].classList.add('on');
+				boxes[idx].classList.add('on');
+			}
+		});
+	};
 	useEffect(() => {
 		getPos();
 		window.addEventListener('resize', getPos);
+		window.addEventListener('scroll', activation);
+		//리액트는 SPA이기 때문에 페이지가 변경된다고 하더라도 스크롤 위치값이 초기화 되지 않으므로 마운트시마다 스크롤값을 초기화함
+		window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 
-		// retutn 언마운트 될때 실행된다.
 		return () => {
-			//윈도우 객체에 이벤트 연결하면 다른 서브페이지의 컴포넌트에서도 동일하게 함수호출되므로 에러 발생
-			//해당 컴포넌트가 unmount시 무조건 window전역객체에 연결되어 있는 이벤트 핸들러 함수 제거
-			//이떄 removeEventListener로 핸들러 함수를 제거하기 위해서는 해당 함수로 외부로 함수로 선언되어 있어야가
-			window.addEventListener('resize', getPos);
+			window.removeEventListener('resize', getPos);
+			window.removeEventListener('scroll', activation);
+			window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 		};
 	}, []);
 
