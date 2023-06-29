@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../common/Header';
 import Visual from './Visual';
 import News from './News';
@@ -8,15 +8,16 @@ import Banner from './Banner';
 import Btns from './Btns';
 
 function Main() {
+	const [scroll, setScrolled] = useState(0);
 	return (
 		<main>
 			<Header type={'main'} />
 			<Visual />
 			<News />
-			<Pics />
+			<Pics scroll={scroll} />
 			<Vids />
 			<Banner />
-			<Btns />
+			<Btns setScrolled={setScrolled} />
 		</main>
 	);
 }
