@@ -1,30 +1,120 @@
-import { useEffect, useRef } from 'react';
 import Layout from '../common/Layout';
+import { useRef, useEffect, useState } from 'react';
+
+import emailjs from '@emailjs/browser';
 
 function Contact() {
 	const container = useRef(null);
-	const { kakao } = window;
+	// 실시간 교통정보
+	const [Traffic, setTraffic] = useState(false);
+	// 위치정보
+	const [Location, setLocation] = useState(null);
+	//  위치정보별 버튼클릭시 해당 위치 순번
+	const [Index, setIndex] = useState(0);
 
-	const option = {
-		// api 사용할때 못찾는다고할때 비구조할당으로 window를 할당해라
-		center: new kakao.maps.LatLng(33.450701, 126.570667),
-		level: 3,
+	//아래 정보값들은 useEffect구문에서 인스턴스 생성할때만 필요한 정보값에 불과하므로 미리 읽히도록 useEffect바깥에 배치
+	const { kakao } = window;
+	const info = [
+		{
+			title: '삼성역 코엑스',
+			latlng: new kakao.maps.LatLng(37.51100661425726, 127.06162026853143),
+			imgSrc: `${process.env.PUBLIC_URL}/img/marker1.png`,
+			imgSize: new kakao.maps.Size(232, 99),
+			imgPos: { offset: new kakao.maps.Point(116, 99) },
+		},
+		{
+			title: '넥슨 본사',
+			latlng: new kakao.maps.LatLng(37.40211707077346, 127.10344953763003),
+			imgSrc: `${process.env.PUBLIC_URL}/img/marker2.png`,
+			imgSize: new kakao.maps.Size(232, 99),
+			imgPos: { offset: new kakao.maps.Point(116, 99) },
+		},
+		{
+			title: '서울 시청',
+			latlng: new kakao.maps.LatLng(37.5662952, 126.9779451),
+			imgSrc: `${process.env.PUBLIC_URL}/img/marker3.png`,
+			imgSize: new kakao.maps.Size(232, 99),
+			imgPos: { offset: new kakao.maps.Point(116, 99) },
+		},
+	];
+	const option = { center: info[Index].latlng, level: 3 };
+	const imgSrc = info[Index].imgSrc;
+	const imgSize = info[Index].imgSize;
+	const imgPos = info[Index].imgPos;
+	const markerImage = new kakao.maps.MarkerImage(imgSrc, imgSize, imgPos);
+	const marker = new kakao.maps.Marker({ position: option.center, image: markerImage });
+
+	// email JS
+	const form = useRef(null);
+	const [success, setSuccess] = useState(false);
+	const sendEmail = (e) => {
+		e.preventDefault();
+
+		emailjs.sendForm('service_khzbkyc', 'template_n0q6tsv', form.current, 'VlnCDrxNCOxiUosTZ').then(
+			(result) => {
+				console.log(result.text);
+				setSuccess(true);
+			},
+			(error) => {
+				console.log(error.text);
+				setSuccess(false);
+			}
+		);
 	};
+	// email JS
 
 	useEffect(() => {
-		// 인스턴스 호출 구문은 마운트시 호출
-		const map = new kakao.maps.Map(container.current, option);
-		var marker = new kakao.maps.Marker({
-			position: option.center,
-		});
+		// 지도 인스턴스 중첩문제 해결
+		container.current.innerHTML = '';
 
-		// 마커가 지도 위에 표시되도록 설정합니다
-		marker.setMap(map);
-	}, []);
+		const mapInstance = new kakao.maps.Map(container.current, option);
+		marker.setMap(mapInstance);
+
+		//지도인스턴스에 타입, 줌 컨트롤 추가
+		mapInstance.addControl(new kakao.maps.MapTypeControl(), kakao.maps.ControlPosition.TOPRIGHT);
+		mapInstance.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
+		setLocation(mapInstance);
+
+		const setCenter = () => {
+			mapInstance.setCenter(info[Index].latlng);
+		};
+		window.addEventListener('resize', setCenter);
+		return () => window.removeEventListener('resize', setCenter);
+	}, [Index]);
+
+	useEffect(() => {
+		Traffic
+			? Location?.addOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC)
+			: Location?.removeOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
+	}, [Traffic]);
 
 	return (
 		<Layout name={'Contact'}>
-			<div ref={container} id='map'></div>
+			<div id='map' ref={container}></div>
+			<button onClick={() => setTraffic(!Traffic)}>{Traffic ? 'Traffic ON' : 'Traffic OFF'}</button>
+
+			{/* 배열정보값을 토대로 동적으로 li지점버튼 생성하고 해당 버튼 클릭할때 순서값 State를 변경하면서 지도화면이 갱신되도록 수정 */}
+			<ul className='branch'>
+				{info.map((el, idx) => {
+					return (
+						<li key={idx} onClick={() => setIndex(idx)} className={idx === Index ? 'on' : ''}>
+							{el.title}
+						</li>
+					);
+				})}
+			</ul>
+			<div id='contact'>
+				<form ref={form} onSubmit={sendEmail}>
+					<label>Name</label>
+					<input type='text' name='user_name' />
+					<label>Email</label>
+					<input type='email' name='user_email' />
+					<label>Message</label>
+					<textarea name='message' />
+					<input type='submit' value='Send' />
+				</form>
+				{success && <p>이메일이 성공적으로 전송되었습니다.</p>}
+			</div>
 		</Layout>
 	);
 }
