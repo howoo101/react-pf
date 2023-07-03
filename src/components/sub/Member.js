@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import Layout from '../common/Layout';
+import { useHistory } from 'react-router-dom';
 
 function Member() {
+	const history = useHistory();
+
 	const initVal = {
 		userid: '',
 		pwd1: '',
@@ -37,6 +40,7 @@ function Member() {
 		const len = Object.keys(Err).length;
 		if (len === 0 && Submit) {
 			alert('모든 인증을 통과했습니다.');
+			history.push('/');
 		}
 	}, [Err]);
 
@@ -87,6 +91,8 @@ function Member() {
 	};
 	return (
 		<Layout name={'Member'}>
+			<button onClick={() => history.goBack()}>뒤로 가기</button>
+
 			<form onSubmit={formSubmit}>
 				<fieldset>
 					<legend className='h'>회원가입 폼 양식</legend>
