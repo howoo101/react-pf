@@ -11,3 +11,16 @@ li {
 a {
 	text-decoration: none;
 }
+fieldset {
+	border: none;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+.h {
+	position: absolute;
+	z-index: -9999;
+	opacity: 0;
+}

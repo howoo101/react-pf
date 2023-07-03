@@ -73,8 +73,11 @@ function Contact() {
 		//지도인스턴스에 타입, 줌 컨트롤 추가
 		mapInstance.addControl(new kakao.maps.MapTypeControl(), kakao.maps.ControlPosition.TOPRIGHT);
 		mapInstance.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
-		setLocation(mapInstance);
 
+		setLocation(mapInstance);
+		//지도영역에 휠 기능 비활성화
+
+		mapInstance.setZoomable(false);
 		const setCenter = () => {
 			mapInstance.setCenter(info[Index].latlng);
 		};
