@@ -8,6 +8,7 @@ function Member() {
 		pwd2: '',
 		email: '',
 		gender: false,
+		hobbys: false,
 	};
 
 	const [Val, setVal] = useState(initVal);
@@ -22,6 +23,12 @@ function Member() {
 	const handleRadio = (e) => {
 		const { name, checked } = e.target;
 		setVal({ ...Val, [name]: checked });
+	};
+
+	const handleCheckbox = (e) => {
+		const { name } = e.target;
+		const isChecked = [...e.target.parentElement.querySelectorAll('input')].some((el) => el.checked);
+		setVal({ ...Val, [name]: isChecked });
 	};
 
 	useEffect(() => {
@@ -64,6 +71,10 @@ function Member() {
 		if (!value.gender) {
 			errs.gender = '성별을 체크해주세요.';
 		}
+
+		if (!value.hobbys) {
+			errs.hobbys = '취미를 체크해주세요.';
+		}
 		return errs;
 	};
 	return (
@@ -87,7 +98,7 @@ function Member() {
 										onChange={handleChange}
 									/>
 									<br />
-									<p>{Err.userid}</p>
+									{Err.userid && <p>{Err.userid}</p>}
 								</td>
 							</tr>
 
@@ -105,7 +116,7 @@ function Member() {
 										onChange={handleChange}
 									/>
 									<br />
-									<p>{Err.pwd1}</p>
+									{Err.pwd1 && <p>{Err.pwd1}</p>}
 								</td>
 							</tr>
 
@@ -123,7 +134,7 @@ function Member() {
 										onChange={handleChange}
 									/>
 									<br />
-									<p>{Err.pwd2}</p>
+									{Err.pwd2 && <p>{Err.pwd2}</p>}
 								</td>
 							</tr>
 
@@ -141,7 +152,7 @@ function Member() {
 										onChange={handleChange}
 									/>
 									<br />
-									<p>{Err.email}</p>
+									{Err.email && <p>{Err.email}</p>}
 								</td>
 							</tr>
 							{/* gender */}
@@ -154,7 +165,24 @@ function Member() {
 									<label htmlFor='female'>FeMale</label>
 									<input type='radio' name='gender' value='female' id='female' onChange={handleRadio} />
 									<br />
-									<p>{Err.gender}</p>
+									{Err.gender && <p>{Err.gender}</p>}
+								</td>
+							</tr>
+
+							{/* hobby */}
+							<tr>
+								<th>HOBBY</th>
+								<td>
+									<label htmlFor='music'>music</label>
+									<input type='checkbox' name='hobbys' value='music' id='music' onChange={handleCheckbox} />
+
+									<label htmlFor='reading'>reading</label>
+									<input type='checkbox' name='hobbys' value='reading' id='reading' onChange={handleCheckbox} />
+
+									<label htmlFor='game'>game</label>
+									<input type='checkbox' name='hobbys' value='game' id='game' onChange={handleCheckbox} />
+									<br />
+									{Err.hobbys && <p>{Err.hobbys}</p>}
 								</td>
 							</tr>
 							{/* btn set */}
