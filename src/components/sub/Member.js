@@ -10,8 +10,8 @@ function Member() {
 		pwd1: '',
 		pwd2: '',
 		email: '',
-		gender: false,
-		hobbys: false,
+		gender: '',
+		hobbys: [],
 		edu: '',
 		comments: '',
 	};
@@ -26,27 +26,32 @@ function Member() {
 	};
 
 	const handleRadio = (e) => {
-		const { name, checked } = e.target;
-		setVal({ ...Val, [name]: checked });
+		const { name, value } = e.target;
+		setVal({ ...Val, [name]: value });
 	};
 
 	const handleCheckbox = (e) => {
 		const { name } = e.target;
-		const isChecked = [...e.target.parentElement.querySelectorAll('input')].some((el) => el.checked);
-		setVal({ ...Val, [name]: isChecked });
+
+		const checks = [...e.target.parentElement.querySelectorAll('input')]
+			.filter((el) => el.checked)
+			.map((el) => {
+				return { [name]: el.value };
+			});
+		setVal({ ...Val, [name]: checks });
 	};
 
 	useEffect(() => {
 		const len = Object.keys(Err).length;
 		if (len === 0 && Submit) {
 			alert('모든 인증을 통과했습니다.');
-			history.push('/');
+			// history.push('/');
 		}
 	}, [Err]);
 
 	const formSubmit = (e) => {
 		e.preventDefault();
-		console.log(`현재 상태값 : ${Val}`);
+		console.log(`현재 상태값 : ${JSON.stringify(Val)}`);
 		// check가 빈환하는 메시지가 있으면 해당 메시지를 화면에 출력하고 전송 중지
 		console.log(check(Val));
 		setErr(check(Val));
@@ -74,7 +79,7 @@ function Member() {
 		if (value.email.length < 8 || !/@/.test(value.email)) {
 			errs.email = '이메일주소는 8글자 이상 @를 포함하세요.';
 		}
-		if (!value.gender) {
+		if (value.gender === '') {
 			errs.gender = '성별을 체크해주세요.';
 		}
 		if (!value.hobbys) {
