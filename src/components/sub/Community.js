@@ -2,11 +2,29 @@ import Layout from '../common/Layout';
 import { useRef, useState, useEffect } from 'react';
 
 function Community() {
+	const dummy = [
+		{ title: 'Hello6', content: 'Here comes description in detail.' },
+		{ title: 'Hello5', content: 'Here comes description in detail.' },
+		{ title: 'Hello4', content: 'Here comes description in detail.' },
+		{ title: 'Hello3', content: 'Here comes description in detail.' },
+		{ title: 'Hello2', content: 'Here comes description in detail.' },
+		{ title: 'Hello1', content: 'Here comes description in detail.' },
+	];
+
+	//로컬저장소의 데이터를 반환하는 함수정의
+	//저장소에 값이 있으면 해당 값을 다시 JSON형태로 변경해서 반환
+	//값이 없으면 빈 배열을 반환
+	const getLocalData = () => {
+		const data = localStorage.getItem('post');
+		if (data) return JSON.parse(data);
+		else return dummy;
+	};
+
 	const input = useRef(null);
 	const textarea = useRef(null);
 	const editInput = useRef(null);
 	const editTextarea = useRef(null);
-	const [Posts, setPosts] = useState([]);
+	const [Posts, setPosts] = useState(getLocalData());
 	const [Allowed, setAllowed] = useState(true);
 
 	const resetForm = () => {
@@ -71,7 +89,7 @@ function Community() {
 	};
 
 	useEffect(() => {
-		console.log(Posts);
+		localStorage.setItem('post', JSON.stringify(Posts));
 	}, [Posts]);
 
 	return (
@@ -138,7 +156,13 @@ Read - 데이터호출 (게시글 보기)
 Upated - 데이터수정 (게시글 수정)
 Delete - 데이터삭제 (게시글 삭제)
 
-localStorage: 모든 브라우저마다 가지고 있는 경량의 데이터 베이스 (문자열 저장)
+local Storage
+	- 각 브라우저마다 가지고 있는 로컬 저장공간
+	- 문자값만 저장가능 (문자가 아닌 데이터는 강제로 문자화시켜서 저장 JSON)
+	- 5MB저장 가능
+	- localStorage.setItem('key', '저장할 문자값') : 값 저장
+	- localStorage.getItem(key) : 값 불러오기
+
 
 수정 모드 작업 흐름
 1- 수정 버튼 클릭시 해당 순번의 Posts의 객체에 수정관련 property 추가
