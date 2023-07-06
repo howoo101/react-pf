@@ -23,7 +23,7 @@ function Gallery() {
 		const method_search = 'flickr.photos.search';
 		const method_user = 'flickr.people.getPhotos';
 
-		const num = 500;
+		const num = 50;
 		let url = '';
 
 		if (opt.type === 'interest') url = `${baseURL}&api_key=${key}&method=${method_interest}&per_page=${num}`;
@@ -34,7 +34,17 @@ function Gallery() {
 
 		console.log(url);
 		const result = await axios.get(url);
-		console.log(result);
+		if (result.data.photos.photo.length === 0) {
+			setLoader(false);
+
+			frame.current.classList.add('on');
+			const btnMine = btnSet.current.children;
+			btnMine[1].classList.add('on');
+			getFlickr({ type: 'user', user: '164021883@N04' });
+			enableEvent.current = true;
+
+			return alert('이미지 결과값이 없습니다.');
+		}
 		setItems(result.data.photos.photo);
 
 		const imgs = frame.current.querySelectorAll('img');
