@@ -8,7 +8,6 @@ function Gallery() {
 	const [Loader, setLoader] = useState(true);
 
 	const frame = useRef(null);
-	const counter = useRef(0);
 
 	const getFlickr = async (opt) => {
 		const baseURL = 'https://www.flickr.com/services/rest/?format=json&nojsoncallback=1';
@@ -24,21 +23,21 @@ function Gallery() {
 		if (opt.type === 'user') url = `${baseURL}${method_user}&user_id=${userId}`;
 
 		const result = await axios.get(url);
-		console.log(result);
+
 		setItems(result.data.photos.photo);
+		const imgs = frame.current.querySelectorAll('img');
+
+		let counter = 0;
+
 		//외부데이터가 State에 담기고 DOM이 생성되는 순간
 		//모든 img요소를 찾아서 반복처리
-		const imgs = frame.current.querySelectorAll('img');
-		counter.current = 0;
+
 		imgs.forEach((img) => {
-			//이미지요소에 load이벤트가 발생할때 (소스이미지까지 로딩이 완료될떄마다)
 			img.onload = () => {
-				//내부적으로 카운터값을 1씩 증가
-				++counter.current;
 				console.log(counter);
-				//로딩완료된 이미지수와 전체이미지수가 같아지면
-				if (counter.current === imgs.length) {
-					//로더 제거하고 이미지 갤러리 보임처리
+				++counter;
+
+				if (counter === imgs.length) {
 					setLoader(false);
 					frame.current.classList.add('on');
 				}
