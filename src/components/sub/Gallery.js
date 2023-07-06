@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 
 function Gallery() {
+	const searchInput = useRef(null);
+
 	const btnSet = useRef(null);
 
 	const enableEvent = useRef(true);
@@ -11,6 +13,7 @@ function Gallery() {
 	const [Items, setItems] = useState([]);
 	const [Loader, setLoader] = useState(true);
 	const userId = '198477162@N05';
+	useEffect(() => getFlickr({ type: 'user', user: userId }), []);
 
 	const getFlickr = async (opt) => {
 		let counter = 0;
@@ -58,6 +61,16 @@ function Gallery() {
 		});
 	};
 
+	const showSearch = (e) => {
+		const tag = searchInput.current.value.trim();
+		if (tag === '') return alert('검색어를 입력하세요.');
+		if (!enableEvent.current) return;
+
+		resetGallery(e);
+		getFlickr({ type: 'search', tags: tag });
+		searchInput.current.value = '';
+	};
+
 	//기존 갤러리 초기화 함수
 	const resetGallery = (e) => {
 		const btns = btnSet.current.querySelectorAll('button');
@@ -92,8 +105,6 @@ function Gallery() {
 		getFlickr({ type: 'user', user: '164021883@N04' });
 	};
 
-	useEffect(() => getFlickr({ type: 'user', user: userId }), []);
-
 	return (
 		<Layout name={'Gallery'}>
 			<div className='btnSet' ref={btnSet}>
@@ -103,6 +114,17 @@ function Gallery() {
 					My Gallery
 				</button>
 			</div>
+
+			<div className='searchBox'>
+				<input
+					type='text'
+					placeholder='검색어를 입력하세요.'
+					ref={searchInput}
+					onKeyPress={(e) => e.key === 'Enter' && showSearch(e)}
+				/>
+				<button onClick={showSearch}>Seach</button>
+			</div>
+
 			<div className='frame' ref={frame}>
 				<Masonry elementType={'div'} options={{ transitionDuration: '0.5s' }}>
 					{Items.map((item, idx) => {
