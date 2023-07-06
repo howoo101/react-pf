@@ -1,54 +1,99 @@
 import Layout from '../common/Layout';
-import axios from 'axios';
 import Masonry from 'react-masonry-component';
+import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 
 function Gallery() {
+	const btnMine = useRef(null);
+	const btnInterest = useRef(null);
+	const enableEvent = useRef(true);
+	const frame = useRef(null);
 	const [Items, setItems] = useState([]);
 	const [Loader, setLoader] = useState(true);
-
-	const frame = useRef(null);
+	const userId = '198477162@N05';
 
 	const getFlickr = async (opt) => {
+		let counter = 0;
 		const baseURL = 'https://www.flickr.com/services/rest/?format=json&nojsoncallback=1';
 		const key = '287211516f841c2ab9b7a6101334112c';
 		const method_interest = 'flickr.interestingness.getList';
 		const method_search = 'flickr.photos.search';
 		const method_user = 'flickr.people.getPhotos';
-		const userId = '198477162@N05';
+
 		const num = 500;
 		let url = '';
+
 		if (opt.type === 'interest') url = `${baseURL}&api_key=${key}&method=${method_interest}&per_page=${num}`;
-		if (opt.type === 'search') url = `${baseURL}${method_search}&tags=${opt.value}`;
-		if (opt.type === 'user') url = `${baseURL}${method_user}&user_id=${userId}`;
+		if (opt.type === 'search')
+			url = `${baseURL}&api_key=${key}&method=${method_search}&per_page=${num}&tags=${opt.tags}`;
+		if (opt.type === 'user')
+			url = `${baseURL}&api_key=${key}&method=${method_user}&per_page=${num}&user_id=${opt.user}`;
 
+		console.log(url);
 		const result = await axios.get(url);
-
+		console.log(result);
 		setItems(result.data.photos.photo);
+
 		const imgs = frame.current.querySelectorAll('img');
-
-		let counter = 0;
-
-		//외부데이터가 State에 담기고 DOM이 생성되는 순간
-		//모든 img요소를 찾아서 반복처리
-
 		imgs.forEach((img) => {
 			img.onload = () => {
-				console.log(counter);
 				++counter;
+				console.log(counter);
 
-				if (counter === imgs.length) {
+				//임시방편 - 전체 이미지 갯수가 하나 모잘라도 출력되게 수정
+				//문제점 - myGallery, interestGallery는 전체 이미지 카운트가 잘 되는데 특정 사용자 갤러리만 갯수가 1씩 모자라는 현상
+				if (counter === imgs.length - 1) {
 					setLoader(false);
 					frame.current.classList.add('on');
+
+					//모션중 재이벤트 방지시 모션이 끝날때까지 이벤트를 방지를 시켜도
+					//모션이 끝나는순간에도 이벤트가 많이 발생하면 특정값이 바뀌는 순간보다 이벤트가 더 빨리들어가서 오류가 발생가능
+					//해결방법 - 물리적으로 이벤트 호출을 지연시켜서 마지막에 발생한 이벤트만 동작처리 (debouncing)
+					//단시간에 많이 발생하는 이벤트시 함수 호출을 줄이는 방법
+					//debouncing: 이벤트 발생시 바로 호출하는게 아닌 일정시간 텀을 두고 마지막에 발생한 이벤트만 호출
+					//throttling: 이벤트 발생시 호출되는 함수자체를 setTimeout으로 적게 호출
+					enableEvent.current = true;
 				}
 			};
 		});
 	};
 
-	useEffect(() => getFlickr({ type: 'interest' }), []);
+	useEffect(() => getFlickr({ type: 'user', user: userId }), []);
 
 	return (
 		<Layout name={'Gallery'}>
+			<button
+				ref={btnInterest}
+				onClick={(e) => {
+					if (!enableEvent.current) return;
+					if (e.target.classList.contains('on')) return;
+					btnMine.current.classList.remove('on');
+					e.target.classList.add('on');
+					enableEvent.current = false;
+					setLoader(true);
+					frame.current.classList.remove('on');
+					getFlickr({ type: 'interest' });
+				}}
+			>
+				Interest Gallery
+			</button>
+			<button
+				className='on'
+				ref={btnMine}
+				onClick={(e) => {
+					if (!enableEvent.current) return;
+					if (e.target.classList.contains('on')) return;
+					btnInterest.current.classList.remove('on');
+					e.target.classList.add('on');
+					enableEvent.current = false;
+					setLoader(true);
+					frame.current.classList.remove('on');
+					getFlickr({ type: 'user', user: userId });
+				}}
+			>
+				My Gallery
+			</button>
+
 			<div className='frame' ref={frame}>
 				<Masonry elementType={'div'} options={{ transitionDuration: '0.5s' }}>
 					{Items.map((item, idx) => {
@@ -65,10 +110,18 @@ function Gallery() {
 									<div className='profile'>
 										<img
 											src={`http://farm${item.farm}.staticflickr.com/${item.server}/buddyicons/${item.owner}.jpg`}
-											alt={item.title}
+											alt={item.owner}
 											onError={(e) => e.target.setAttribute('src', 'https://www.flickr.com/images/buddyicon.gif')}
 										/>
-										<span>{item.owner}</span>
+										<span
+											onClick={(e) => {
+												setLoader(true);
+												frame.current.classList.remove('on');
+												getFlickr({ type: 'user', user: e.target.innerText });
+											}}
+										>
+											{item.owner}
+										</span>
 									</div>
 								</div>
 							</article>
