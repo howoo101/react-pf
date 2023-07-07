@@ -16,6 +16,8 @@ function Gallery() {
 	const frame = useRef(null);
 	const [Items, setItems] = useState([]);
 	const [Loader, setLoader] = useState(true);
+	const [Index, setIndex] = useState(0);
+
 	const userId = '198477162@N05';
 	useEffect(() => getFlickr({ type: 'user', user: userId }), []);
 
@@ -146,7 +148,13 @@ function Gallery() {
 							return (
 								<article key={idx}>
 									<div className='inner'>
-										<div className='pic' onClick={() => openModal.current.open()}>
+										<div
+											className='pic'
+											onClick={() => {
+												openModal.current.open();
+												setIndex(idx);
+											}}
+										>
 											<img
 												src={`https://live.staticflickr.com/${item.server}/${item.id}_${item.secret}_m.jpg`}
 												alt={item.title}
@@ -179,7 +187,12 @@ function Gallery() {
 				</div>
 				{Loader && <img className='loader' src={`${process.env.PUBLIC_URL}/img/loading.gif`} alt='loader' />}
 			</Layout>
-			<Modal ref={openModal}></Modal>
+			<Modal ref={openModal}>
+				<img
+					src={`https://live.staticflickr.com/${Items[Index]?.server}/${Items[Index]?.id}_${Items[Index]?.secret}_b.jpg`}
+					alt={Items[Index]?.title}
+				/>
+			</Modal>
 		</>
 	);
 }
