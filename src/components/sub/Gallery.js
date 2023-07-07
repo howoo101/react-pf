@@ -108,8 +108,6 @@ function Gallery() {
 	};
 
 	const showMine = (e) => {
-		alert(1);
-		console.log(enableEvent.current);
 		//재이벤트, 모션중 재이벤트 방지
 		if (!enableEvent.current) return;
 		if (e.target.classList.contains('on')) return;
