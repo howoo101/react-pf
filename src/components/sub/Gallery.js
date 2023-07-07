@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 
 function Gallery() {
+	const isUser = useRef(true);
+
 	const searchInput = useRef(null);
 
 	const btnSet = useRef(null);
@@ -32,7 +34,6 @@ function Gallery() {
 		if (opt.type === 'user')
 			url = `${baseURL}&api_key=${key}&method=${method_user}&per_page=${num}&user_id=${opt.user}`;
 
-		console.log(url);
 		const result = await axios.get(url);
 		if (result.data.photos.photo.length === 0) {
 			setLoader(false);
@@ -40,7 +41,7 @@ function Gallery() {
 			frame.current.classList.add('on');
 			const btnMine = btnSet.current.children;
 			btnMine[1].classList.add('on');
-			getFlickr({ type: 'user', user: '164021883@N04' });
+			getFlickr({ type: 'user', user: userId });
 			enableEvent.current = true;
 
 			return alert('이미지 결과값이 없습니다.');
@@ -52,19 +53,16 @@ function Gallery() {
 			img.onload = () => {
 				++counter;
 				console.log(counter);
-
-				//임시방편 - 전체 이미지 갯수가 하나 모잘라도 출력되게 수정
-				//문제점 - myGallery, interestGallery는 전체 이미지 카운트가 잘 되는데 특정 사용자 갤러리만 갯수가 1씩 모자라는 현상
-				if (counter === imgs.length - 1) {
+				console.log(imgs.length);
+				//문제점 - myGallery, interestGallery는 전체 이미지 카운트가 잘 되는데 특정 사용자 갤러리만 갯수가 2씩 모자라는 현상
+				if (counter === imgs.length - 2) {
 					setLoader(false);
 					frame.current.classList.add('on');
 
-					//모션중 재이벤트 방지시 모션이 끝날때까지 이벤트를 방지를 시켜도
-					//모션이 끝나는순간에도 이벤트가 많이 발생하면 특정값이 바뀌는 순간보다 이벤트가 더 빨리들어가서 오류가 발생가능
-					//해결방법 - 물리적으로 이벤트 호출을 지연시켜서 마지막에 발생한 이벤트만 동작처리 (debouncing)
-					//단시간에 많이 발생하는 이벤트시 함수 호출을 줄이는 방법
-					//debouncing: 이벤트 발생시 바로 호출하는게 아닌 일정시간 텀을 두고 마지막에 발생한 이벤트만 호출
-					//throttling: 이벤트 발생시 호출되는 함수자체를 setTimeout으로 적게 호출
+					//이슈해결 - 특정 사용자 아이디로 갤러리 출력해서 counter갯수가 2가 부족한 이유는
+					//추력될 이미지돔요소중에서 이미 해당사용자의 이미지와 프로필에 이미지소스2개가 캐싱이 완료되었기때문에
+					//실제 생성된 imgDOM의 갯수는 20개이지만 2개소스이미지의 캐싱이 완료되었기 때문에 onload이벤트는 18번만 발생
+
 					enableEvent.current = true;
 				}
 			};
@@ -79,6 +77,7 @@ function Gallery() {
 		resetGallery(e);
 		getFlickr({ type: 'search', tags: tag });
 		searchInput.current.value = '';
+		isUser.current = false;
 	};
 
 	//기존 갤러리 초기화 함수
@@ -101,9 +100,12 @@ function Gallery() {
 
 		//새로운 데이터로 갤러리 생성 함수 호출
 		getFlickr({ type: 'interest' });
+		isUser.current = false;
 	};
 
 	const showMine = (e) => {
+		alert(1);
+		console.log(enableEvent.current);
 		//재이벤트, 모션중 재이벤트 방지
 		if (!enableEvent.current) return;
 		if (e.target.classList.contains('on')) return;
@@ -112,7 +114,7 @@ function Gallery() {
 		resetGallery(e);
 
 		//새로운 데이터로 갤러리 생성 함수 호출
-		getFlickr({ type: 'user', user: '164021883@N04' });
+		getFlickr({ type: 'user', user: userId });
 	};
 
 	return (
@@ -156,6 +158,8 @@ function Gallery() {
 										/>
 										<span
 											onClick={(e) => {
+												if (isUser.current) return;
+												isUser.current = true;
 												setLoader(true);
 												frame.current.classList.remove('on');
 												getFlickr({ type: 'user', user: e.target.innerText });
