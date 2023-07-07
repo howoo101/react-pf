@@ -1,9 +1,17 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, NavLink } from 'react-router-dom';
 const Menu = forwardRef((props, ref) => {
 	const active = { color: 'aqua' };
 	const [Open, setOpen] = useState(false);
+
+	// resize시 패널 닫히도록
+	useEffect(() => {
+		window.addEventListener('resize', () => {
+			if (window.innerWidth >= 1200) setOpen(false);
+		});
+	}, []);
+
 	useImperativeHandle(ref, () => {
 		return { toggle: () => setOpen(!Open) };
 	});
@@ -16,6 +24,9 @@ const Menu = forwardRef((props, ref) => {
 						initial={{ opacity: 0, x: -280 }}
 						animate={{ opacity: 1, x: 0, transition: { duration: 0.5 } }}
 						exit={{ opacity: 0, x: -280, transition: { duration: 0.5 } }}
+						onClick={() => {
+							setOpen(false);
+						}}
 					>
 						<h1>
 							<Link to='/'>LOGO</Link>
