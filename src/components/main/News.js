@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import LocalStorage from '../common/LocalStorage';
 
 function News() {
@@ -23,4 +23,4 @@ function News() {
 	);
 }
 
-export default News;
+export default memo(News);
