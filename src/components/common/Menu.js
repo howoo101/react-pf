@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, NavLink } from 'react-router-dom';
-const Menu = forwardRef((props, ref) => {
+const Menu = forwardRef((props, menu) => {
 	const active = { color: 'aqua' };
 	const [Open, setOpen] = useState(false);
 
@@ -12,7 +12,7 @@ const Menu = forwardRef((props, ref) => {
 		});
 	}, []);
 
-	useImperativeHandle(ref, () => {
+	useImperativeHandle(menu, () => {
 		return { toggle: () => setOpen(!Open) };
 	});
 	return (
