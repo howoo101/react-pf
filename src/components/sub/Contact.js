@@ -1,5 +1,5 @@
 import Layout from '../common/Layout';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useMemo } from 'react';
 
 import emailjs from '@emailjs/browser';
 
@@ -14,7 +14,7 @@ function Contact() {
 
 	//아래 정보값들은 useEffect구문에서 인스턴스 생성할때만 필요한 정보값에 불과하므로 미리 읽히도록 useEffect바깥에 배치
 	const { kakao } = window;
-	const info = [
+	const info = useRef([
 		{
 			title: '삼성역 코엑스',
 			latlng: new kakao.maps.LatLng(37.51100661425726, 127.06162026853143),
@@ -36,13 +36,18 @@ function Contact() {
 			imgSize: new kakao.maps.Size(232, 99),
 			imgPos: { offset: new kakao.maps.Point(116, 99) },
 		},
-	];
-	const option = { center: info[Index].latlng, level: 3 };
-	const imgSrc = info[Index].imgSrc;
-	const imgSize = info[Index].imgSize;
-	const imgPos = info[Index].imgPos;
-	const markerImage = new kakao.maps.MarkerImage(imgSrc, imgSize, imgPos);
-	const marker = new kakao.maps.Marker({ position: option.center, image: markerImage });
+	]);
+
+	const marker = useMemo(() => {
+		return new kakao.maps.Marker({
+			position: info.current[Index].latlng,
+			image: new kakao.maps.MarkerImage(
+				info.current[Index].imgSrc,
+				info.current[Index].imgSize,
+				info.current[Index].imgPos
+			),
+		});
+	}, [Index, kakao]);
 
 	// email JS
 	const form = useRef(null);
@@ -67,7 +72,7 @@ function Contact() {
 		// 지도 인스턴스 중첩문제 해결
 		container.current.innerHTML = '';
 
-		const mapInstance = new kakao.maps.Map(container.current, option);
+		const mapInstance = new kakao.maps.Map(container.current, { center: info.current[Index].latlng, level: 3 });
 		marker.setMap(mapInstance);
 
 		//지도인스턴스에 타입, 줌 컨트롤 추가
@@ -79,17 +84,17 @@ function Contact() {
 
 		mapInstance.setZoomable(false);
 		const setCenter = () => {
-			mapInstance.setCenter(info[Index].latlng);
+			mapInstance.setCenter(info.current[Index].latlng);
 		};
 		window.addEventListener('resize', setCenter);
 		return () => window.removeEventListener('resize', setCenter);
-	}, [Index]);
+	}, [Index, kakao, marker]);
 
 	useEffect(() => {
 		Traffic
 			? Location?.addOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC)
 			: Location?.removeOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
-	}, [Traffic]);
+	}, [Traffic, Location, kakao]);
 
 	return (
 		<Layout name={'Contact'}>
@@ -98,7 +103,7 @@ function Contact() {
 
 			{/* 배열정보값을 토대로 동적으로 li지점버튼 생성하고 해당 버튼 클릭할때 순서값 State를 변경하면서 지도화면이 갱신되도록 수정 */}
 			<ul className='branch'>
-				{info.map((el, idx) => {
+				{info.current.map((el, idx) => {
 					return (
 						<li key={idx} onClick={() => setIndex(idx)} className={idx === Index ? 'on' : ''}>
 							{el.title}
