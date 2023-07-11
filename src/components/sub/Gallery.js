@@ -1,7 +1,7 @@
 import Layout from '../common/Layout';
 import Masonry from 'react-masonry-component';
 import axios from 'axios';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Modal from '../common/Modal';
 
 function Gallery() {
@@ -19,9 +19,8 @@ function Gallery() {
 	const [Index, setIndex] = useState(0);
 
 	const userId = '198477162@N05';
-	useEffect(() => getFlickr({ type: 'user', user: userId }), []);
 
-	const getFlickr = async (opt) => {
+	const getFlickr = useCallback(async (opt) => {
 		let counter = 0;
 		const baseURL = 'https://www.flickr.com/services/rest/?format=json&nojsoncallback=1';
 		const key = '287211516f841c2ab9b7a6101334112c';
@@ -71,7 +70,9 @@ function Gallery() {
 				}
 			};
 		});
-	};
+	}, []);
+
+	useEffect(() => getFlickr({ type: 'user', user: userId }), [getFlickr]);
 
 	const showSearch = (e) => {
 		const tag = searchInput.current.value.trim();
