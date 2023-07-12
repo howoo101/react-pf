@@ -1,23 +1,33 @@
 import Layout from '../common/Layout';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { setMembers } from '../../redux/action';
 function Department() {
-	const [Members, setMembers] = useState([]);
+	// const [Members, setMembers] = useState([]);
 	const members = useSelector((store) => store.memberReducer.members);
-	useEffect(() => {
-		console.log('Mount 완료');
+	const dispatch = useDispatch();
+	// useEffect(() => {
+	// 	console.log('Mount 완료');
 
-		// axios.get(`${process.env.PUBLIC_URL + '/DB/members.json'}`).then((json) => {
-		// console.log(json.data.members);
-		setMembers(members);
-		// });
-	}, [members]);
+	// 	// axios.get(`${process.env.PUBLIC_URL + '/DB/members.json'}`).then((json) => {
+	// 	// console.log(json.data.members);
+	// 	// setMembers(members);
+	// 	// });
+	// }, [members]);
 
 	return (
 		<Layout name={'Department'}>
-			{Members.map((member, idx) => {
+			<button
+				onClick={() => {
+					const newMembers = [...members];
+					newMembers[0].name = 'Emma';
+					dispatch(setMembers(newMembers));
+				}}
+			>
+				멤버 데이터 변경
+			</button>
+			{members.map((member, idx) => {
 				return (
 					<article key={idx}>
 						<div className='pic'>
