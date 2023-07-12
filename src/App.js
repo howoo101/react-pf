@@ -19,11 +19,17 @@ import Main from './components/main/Main';
 import { useCallback, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { setYoutube } from './redux/action';
+import { setYoutube, setMembers } from './redux/action';
 
 function App() {
 	const menu = useRef(null);
 	const dispatch = useDispatch();
+
+	const fetchMembers = useCallback(async () => {
+		const members = (await axios.get(`${process.env.PUBLIC_URL + '/DB/members.json'}`)).data.members;
+
+		dispatch(setMembers(members));
+	}, [dispatch]);
 
 	const fetchYoutube = useCallback(async () => {
 		const apiKey = 'AIzaSyBm1-5iAqRnlxETXyLSvDYAaSnMKGrr8fY';
@@ -37,8 +43,11 @@ function App() {
 	}, [dispatch]);
 
 	useEffect(() => {
+		console.log('youtube fetching 완료');
 		fetchYoutube();
-	}, [fetchYoutube]);
+		console.log('department json fetching 완료');
+		fetchMembers();
+	}, [fetchYoutube, fetchMembers]);
 
 	return (
 		<>
