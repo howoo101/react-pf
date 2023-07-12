@@ -16,7 +16,7 @@ import Youtube from './components/sub/Youtube';
 
 import './scss/style.scss';
 import Main from './components/main/Main';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setYoutube } from './redux/action';
@@ -25,7 +25,7 @@ function App() {
 	const menu = useRef(null);
 	const dispatch = useDispatch();
 
-	const fetchYoutube = async () => {
+	const fetchYoutube = useCallback(async () => {
 		const apiKey = 'AIzaSyBm1-5iAqRnlxETXyLSvDYAaSnMKGrr8fY';
 		const playlistId = 'PLtyGCdgf6inmUrDz2XNQJq37nfcZFOJ_M';
 		const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&key=${apiKey}&maxResults=50`;
@@ -34,11 +34,11 @@ function App() {
 		const json = await data.data.items;
 
 		dispatch(setYoutube(json));
-	};
+	}, [dispatch]);
 
 	useEffect(() => {
 		fetchYoutube();
-	}, []);
+	}, [fetchYoutube]);
 
 	return (
 		<>
