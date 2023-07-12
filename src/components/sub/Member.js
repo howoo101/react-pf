@@ -1,22 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Layout from '../common/Layout';
 import { useHistory } from 'react-router-dom';
 
 function Member() {
 	const history = useHistory();
 
-	const initVal = {
+	//initVal값을 굳이 useMemo로 메모이제이션 하지 않더라도 useRef로 담아놓으면 해당 값은 컴포넌트가 재랜더링되더라도 값을 기억
+	const initVal = useRef({
 		userid: '',
 		pwd1: '',
 		pwd2: '',
 		email: '',
 		gender: '',
-		hobbys: [],
+		interests: [],
 		edu: '',
 		comments: '',
-	};
-
-	const [Val, setVal] = useState(initVal);
+	});
+	const [Val, setVal] = useState(initVal.current);
 	const [Err, setErr] = useState({});
 	const [Submit, setSubmit] = useState(false);
 
@@ -47,7 +47,7 @@ function Member() {
 			alert('모든 인증을 통과했습니다.');
 			// history.push('/');
 		}
-	}, [Err]);
+	}, [Submit, Err]);
 
 	const formSubmit = (e) => {
 		e.preventDefault();

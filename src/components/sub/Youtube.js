@@ -46,7 +46,7 @@ function Youtube() {
 					<iframe
 						title={Videoes[idx].id}
 						src={`https://www.youtube.com/embed/${Videoes[idx].snippet.resourceId.videoId}`}
-						frameborder='0'
+						frameBorder='0'
 					></iframe>
 				)}
 			</Modal>
