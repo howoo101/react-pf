@@ -1,29 +1,14 @@
 import Layout from '../common/Layout';
 import { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
 import Modal from '../common/Modal';
-import { setYoutube } from '../../redux/action';
 import { useSelector, useDispatch } from 'react-redux';
 
 function Youtube() {
 	const Videoes = useSelector((store) => store.youtubeReducer.youtube);
-	const dispatch = useDispatch();
-	const FetchYoutube = async () => {
-		const apiKey = 'AIzaSyBm1-5iAqRnlxETXyLSvDYAaSnMKGrr8fY';
-		const playlistId = 'PLtyGCdgf6inmUrDz2XNQJq37nfcZFOJ_M';
-		const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&key=${apiKey}&maxResults=50`;
-		const data = await axios.get(url);
-		// console.log(data);
-		const json = await data.data.items;
 
-		dispatch(setYoutube(json));
-	};
 	const modal = useRef(null);
 	// const [Videoes, setVideoes] = useState([]);
 	const [idx, setIdx] = useState(0);
-	useEffect(() => {
-		FetchYoutube();
-	}, []);
 
 	return (
 		<>
