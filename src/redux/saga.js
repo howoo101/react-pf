@@ -1,29 +1,29 @@
 //reducer에 액션요청이 처음 들어왔을때 중간에서 가로채서 대신 중간작업을 수행한뒤 다시 새롭게 반환된 액션객체를 리듀서에 다시 전달 (미들웨어 : 중간 특정시점에 간섭을 해서 부가적인 기능을 수행 )
 
-import { call, fork, put, takeLatest } from 'redux-saga/effects';
-import * as types from './actionType';
+import { takeLatest, put, call, fork, all } from 'redux-saga/effects';
 import { fetchYoutube } from './api';
-import { all } from 'axios';
+import * as types from './actionType';
 
-// Youtube_START 액션요청을 데이터 fetching하는 함수를 대신 호출해 주는 함수
+//컴포넌트로부터 리듀서에 전달된 YOUTUBE_START 액션요청을 대신 전달받아 데이터 fetching함수 호출해주는 함수
 function* callYoutube() {
 	yield takeLatest(types.YOUTUBE.start, returnYoutube);
 }
 
+//유튜브 데이터 호출한뒤 반환된 값으로 새롭게 액션객체를 생성하는 함수
 function* returnYoutube() {
 	try {
-		// 데이터 fetching 성공
-		const response = yield call(fetchYoutube);
-		yield put({ type: types.YOUTUBE.success, payload: response.data.items });
+		//데이터 fetching에 성공했을때
+		const data = yield call(fetchYoutube);
+		yield put({ type: types.YOUTUBE.success, payload: data });
 	} catch (error) {
 		// 데이터 fetching 실패
 		yield put({ type: types.YOUTUBE.fail, payload: error });
 	}
 }
 
-// 최종적으로 fork를 통해 callYoutube 호출 함수 제작
+//최종적으로 fork를 통해 callYoutube호출 함수 제작
 export default function* rootSaga() {
-	yield all([fork(callYoutube())]);
+	yield all([fork(callYoutube)]);
 }
 
 /*
