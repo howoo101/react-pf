@@ -15,4 +15,4 @@ const store = createStore(reducers, applyMiddleware(sagaMiddleware));
 sagaMiddleware.run(rootSaga);
 
 //saga미들웨어가 적용된 reducer데이터를 store에 저장하고 export
-export default store;
+export { store };
