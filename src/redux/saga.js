@@ -1,7 +1,7 @@
 //reducer에 액션요청이 처음 들어왔을때 중간에서 가로채서 대신 중간작업을 수행한뒤 다시 새롭게 반환된 액션객체를 리듀서에 다시 전달 (미들웨어 : 중간 특정시점에 간섭을 해서 부가적인 기능을 수행 )
 
 import { takeLatest, put, call, fork, all } from 'redux-saga/effects';
-import { fetchYoutube } from './api';
+import { fetchYoutube, fetchDepartment } from './api';
 import * as types from './actionType';
 
 //컴포넌트로부터 리듀서에 전달된 YOUTUBE_START 액션요청을 대신 전달받아 데이터 fetching함수 호출해주는 함수
@@ -21,9 +21,22 @@ function* returnYoutube() {
 	}
 }
 
+//department saga
+function* callDepartment() {
+	yield takeLatest(types.DEPARTMENT.start, returnDepartment);
+}
+function* returnDepartment() {
+	try {
+		const response = yield call(fetchDepartment);
+		yield put({ type: types.DEPARTMENT.success, payload: response.data.members });
+	} catch (err) {
+		yield put({ type: types.DEPARTMENT.fail, payload: err });
+	}
+}
+
 //최종적으로 fork를 통해 callYoutube호출 함수 제작
 export default function* rootSaga() {
-	yield all([fork(callYoutube)]);
+	yield all([fork(callYoutube), fork(callDepartment)]);
 }
 
 /*
