@@ -21,6 +21,7 @@ function Gallery() {
 	const Items = useSelector((store) => store.flickrReducer.flickr);
 	const dispatch = useDispatch();
 	const [Opt, setOpt] = useState({ type: 'user', user: userId });
+	const counter = useRef(0);
 
 	const [Loader, setLoader] = useState(true);
 	const [Index, setIndex] = useState(0);
@@ -81,6 +82,33 @@ function Gallery() {
 		dispatch({ type: types.FLICKR.start, opt: Opt });
 	}, [dispatch, Opt]);
 
+	useEffect(() => {
+		console.log(Items);
+		counter.current = 0;
+		if (Items.length === 0) {
+			setLoader(false);
+			frame.current.classList.add('on');
+			const btnMine = btnSet.current.children;
+			btnMine[1].classList.add('on');
+			setOpt({ type: 'user', user: userId });
+			enableEvent.current = true;
+			return alert('이미지 결과값이 없습니다.');
+		}
+
+		const imgs = frame.current.querySelectorAll('img');
+
+		imgs.forEach((img) => {
+			img.onload = () => {
+				++counter.current;
+
+				if (counter.current === imgs.length - 2) {
+					setLoader(false);
+					frame.current.classList.add('on');
+					enableEvent.current = true;
+				}
+			};
+		});
+	}, [Items]);
 	const showSearch = (e) => {
 		const tag = searchInput.current.value.trim();
 		if (tag === '') return alert('검색어를 입력하세요.');
