@@ -16,10 +16,17 @@ import Youtube from './components/sub/Youtube';
 
 import './scss/style.scss';
 import Main from './components/main/Main';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchYoutube } from './redux/youtubeSlice';
 
 function App() {
 	const menu = useRef(null);
+
+	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(fetchYoutube());
+	}, [dispatch]);
 
 	return (
 		<>
