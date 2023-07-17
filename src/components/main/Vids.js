@@ -1,13 +1,28 @@
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination } from 'swiper';
+// Import Swiper styles
 import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 function Vids() {
 	const Vids = useSelector((store) => store.youtube.data);
 	return (
 		<section id='vids' className='myScroll'>
-			<Swiper loop={true} spaceBetween={50}>
+			<Swiper
+				modules={[Autoplay, Pagination]}
+				loop={true}
+				spaceBetween={50}
+				slidesPerView={3}
+				centeredSlides={true}
+				autoplay={{
+					delay: 1000,
+					disableOnInteraction: true,
+				}}
+				pagination={true}
+			>
 				{Vids.map((vid, idx) => {
 					if (idx >= 5) return null;
 
