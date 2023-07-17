@@ -19,6 +19,7 @@ import Main from './components/main/Main';
 import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchYoutube } from './redux/youtubeSlice';
+import { fetchDepartment } from './redux/departmentSlice';
 
 function App() {
 	const menu = useRef(null);
@@ -26,6 +27,7 @@ function App() {
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(fetchYoutube());
+		dispatch(fetchDepartment());
 	}, [dispatch]);
 
 	return (
