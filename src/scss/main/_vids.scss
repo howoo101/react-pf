@@ -55,3 +55,11 @@
 		}
 	}
 }
+
+@media screen and (max-width: $tablet) {
+	#vids {
+		.swiper {
+			padding: 12vw 50px;
+		}
+	}
+}

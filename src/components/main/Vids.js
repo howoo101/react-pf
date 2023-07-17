@@ -15,7 +15,13 @@ function Vids() {
 				modules={[Autoplay, Pagination]}
 				loop={true}
 				spaceBetween={50}
-				slidesPerView={3}
+				slidesPerView={1}
+				breakpoints={{
+					1200: {
+						slidesPerView: 3,
+						spaceBetween: 50,
+					},
+				}}
 				centeredSlides={true}
 				autoplay={{
 					delay: 1000,
