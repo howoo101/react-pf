@@ -2,11 +2,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 import { close } from '../../redux/menuSlice';
+import { useEffect } from 'react';
 function Menu() {
 	const active = { color: 'aqua' };
 
 	const dispatch = useDispatch();
 	const menu = useSelector((store) => store.menu.open);
+
+	useEffect(() => {
+		window.addEventListener('resize', () => {
+			if (window.innerWidth >= 1200) dispatch(close());
+		});
+	}, [dispatch]);
 
 	return (
 		<>
