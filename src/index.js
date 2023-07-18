@@ -7,12 +7,14 @@ import youtubeReducer from './redux/youtubeSlice';
 import departmentSlice from './redux/departmentSlice';
 import flickrReducer from './redux/flickrSlice';
 import { configureStore } from '@reduxjs/toolkit';
+import menuReducer from './redux/menuSlice';
 
 const store = configureStore({
 	reducer: {
 		youtube: youtubeReducer,
 		department: departmentSlice,
 		flickr: flickrReducer,
+		menu: menuReducer,
 	},
 });
 
