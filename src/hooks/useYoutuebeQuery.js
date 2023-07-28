@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-const { default: axios } = require('axios');
+import axios from 'axios';
 
 const fetchYoutube = async () => {
 	const apiKey = 'AIzaSyBm1-5iAqRnlxETXyLSvDYAaSnMKGrr8fY';
