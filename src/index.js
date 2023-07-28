@@ -4,14 +4,12 @@ import App from './App';
 import { HashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import departmentSlice from './redux/departmentSlice';
-import flickrReducer from './redux/flickrSlice';
 import { configureStore } from '@reduxjs/toolkit';
 import menuReducer from './redux/menuSlice';
 
 const store = configureStore({
 	reducer: {
 		department: departmentSlice,
-		flickr: flickrReducer,
 		menu: menuReducer,
 	},
 });

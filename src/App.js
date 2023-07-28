@@ -19,7 +19,6 @@ import Main from './components/main/Main';
 import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchDepartment } from './redux/departmentSlice';
-import { fetchFlickr } from './redux/flickrSlice';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
@@ -30,7 +29,6 @@ function App() {
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(fetchDepartment());
-		dispatch(fetchFlickr({ type: 'user', user: '198477162@N05' }));
 	}, [dispatch]);
 
 	return (
