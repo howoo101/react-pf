@@ -21,8 +21,11 @@ import { useDispatch } from 'react-redux';
 import { fetchYoutube } from './redux/youtubeSlice';
 import { fetchDepartment } from './redux/departmentSlice';
 import { fetchFlickr } from './redux/flickrSlice';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 function App() {
+	const queryClient = new QueryClient();
 	const menu = useRef(null);
 
 	const dispatch = useDispatch();
@@ -33,7 +36,7 @@ function App() {
 	}, [dispatch]);
 
 	return (
-		<>
+		<QueryClientProvider client={queryClient}>
 			<Switch>
 				<Route exact path='/' render={() => <Main menu={menu} />} />
 				<Route path='/' render={() => <Header type={'sub'} menu={menu} />} />
@@ -47,7 +50,8 @@ function App() {
 			<Route path='/member' component={Member} />
 			<Footer />
 			<Menu ref={menu} />
-		</>
+			<ReactQueryDevtools />
+		</QueryClientProvider>
 	);
 }
 
