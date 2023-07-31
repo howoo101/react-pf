@@ -40,7 +40,7 @@ function BtnRolling() {
 
 function Vids() {
 	const { data: Vids, isSuccess } = useYoutubeQuery();
-	console.log(Vids, isSuccess);
+
 	return (
 		<section id='vids' className='myScroll'>
 			<Swiper
