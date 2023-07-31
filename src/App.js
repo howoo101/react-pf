@@ -16,20 +16,13 @@ import Youtube from './components/sub/Youtube';
 
 import './scss/style.scss';
 import Main from './components/main/Main';
-import { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { fetchDepartment } from './redux/departmentSlice';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { useRef } from 'react';
 
 function App() {
 	const queryClient = new QueryClient();
 	const menu = useRef(null);
-
-	const dispatch = useDispatch();
-	useEffect(() => {
-		dispatch(fetchDepartment());
-	}, [dispatch]);
 
 	return (
 		<QueryClientProvider client={queryClient}>
