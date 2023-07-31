@@ -21,7 +21,6 @@ function Btns({ setScroll, setPos }) {
 	}, [setScroll]);
 
 	const activation = useCallback(() => {
-		console.log(1);
 		const base = -window.innerHeight / 2;
 		const scroll = window.scrollY;
 		const btns = btnRef.current.children;
@@ -42,13 +41,14 @@ function Btns({ setScroll, setPos }) {
 		getPos();
 		window.addEventListener('resize', eventBloker);
 		window.addEventListener('scroll', eventBloker2);
-		window.addEventListener('scroll', () => changeScroll);
+		window.addEventListener('scroll', changeScroll);
 		//리액트는 SPA이기 때문에 페이지가 변경된다고 하더라도 스크롤 위치값이 초기화 되지 않으므로 마운트시마다 스크롤값을 초기화함
 		window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 
 		return () => {
 			window.removeEventListener('resize', eventBloker);
 			window.removeEventListener('scroll', eventBloker2);
+			window.removeEventListener('scroll', changeScroll);
 			window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 		};
 	}, [getPos, eventBloker, eventBloker2, changeScroll]);
