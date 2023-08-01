@@ -51,7 +51,7 @@ function Gallery() {
 				}
 			};
 		});
-	}, [Items]);
+	}, [Items, isSuccess]);
 
 	const showSearch = (e) => {
 		const tag = searchInput.current.value.trim();

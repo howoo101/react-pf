@@ -2,6 +2,8 @@ import Layout from '../common/Layout';
 import { useRef, useEffect, useState, useMemo } from 'react';
 
 import emailjs from '@emailjs/browser';
+import { EventBlocker } from '../../hooks/EventBlocker';
+import { useCallback } from 'react';
 
 function Contact() {
 	const container = useRef(null);
@@ -68,6 +70,12 @@ function Contact() {
 	};
 	// email JS
 
+	const setCenter = useCallback(() => {
+		console.log('setCenter');
+		Location?.setCenter(info.current[Index].latlng);
+	}, [Index, Location]);
+	const setCenter2 = EventBlocker(setCenter);
+
 	useEffect(() => {
 		// 지도 인스턴스 중첩문제 해결
 		container.current.innerHTML = '';
@@ -79,15 +87,9 @@ function Contact() {
 		mapInstance.addControl(new kakao.maps.MapTypeControl(), kakao.maps.ControlPosition.TOPRIGHT);
 		mapInstance.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
 
-		setLocation(mapInstance);
 		//지도영역에 휠 기능 비활성화
 
 		mapInstance.setZoomable(false);
-		const setCenter = () => {
-			mapInstance.setCenter(info.current[Index].latlng);
-		};
-		window.addEventListener('resize', setCenter);
-		return () => window.removeEventListener('resize', setCenter);
 	}, [Index, kakao, marker]);
 
 	useEffect(() => {
@@ -96,6 +98,10 @@ function Contact() {
 			: Location?.removeOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
 	}, [Traffic, Location, kakao]);
 
+	useEffect(() => {
+		window.addEventListener('resize', setCenter2);
+		return () => window.removeEventListener('resize', setCenter2);
+	}, [setCenter2]);
 	return (
 		<Layout name={'Contact'}>
 			<div id='map' ref={container}></div>
