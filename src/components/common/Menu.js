@@ -1,32 +1,30 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link, NavLink } from 'react-router-dom';
-const Menu = forwardRef((props, menu) => {
-	const active = { color: 'aqua' };
-	const [Open, setOpen] = useState(false);
 
-	// resize시 패널 닫히도록
+import { Link, NavLink } from 'react-router-dom';
+
+import { useEffect } from 'react';
+import { useGlobalData } from '../../hooks/useGlobalContext';
+function Menu() {
+	const active = { color: 'aqua' };
+
+	const { menuOpen, setMenuOpen } = useGlobalData();
+
 	useEffect(() => {
 		window.addEventListener('resize', () => {
-			if (window.innerWidth >= 1200) setOpen(false);
+			if (window.innerWidth >= 1200);
 		});
 	}, []);
 
-	useImperativeHandle(menu, () => {
-		return { toggle: () => setOpen(!Open) };
-	});
 	return (
 		<>
 			<AnimatePresence>
-				{Open && (
+				{menuOpen && (
 					<motion.nav
 						id='mobilePanel'
 						initial={{ opacity: 0, x: -280 }}
 						animate={{ opacity: 1, x: 0, transition: { duration: 0.5 } }}
 						exit={{ opacity: 0, x: -280, transition: { duration: 0.5 } }}
-						onClick={() => {
-							setOpen(false);
-						}}
+						onClick={() => setMenuOpen(false)}
 					>
 						<h1>
 							<Link to='/'>LOGO</Link>
@@ -69,6 +67,6 @@ const Menu = forwardRef((props, menu) => {
 			</AnimatePresence>
 		</>
 	);
-});
+}
 
 export default Menu;

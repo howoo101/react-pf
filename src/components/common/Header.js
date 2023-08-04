@@ -4,8 +4,12 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 import { memo } from 'react';
 
-function Header({ type, menu }) {
+import { useGlobalData } from '../../hooks/useGlobalContext';
+
+function Header({ type }) {
 	const active = 'on';
+	const { menuOpen, setMenuOpen } = useGlobalData();
+
 	return (
 		<>
 			<header className={type}>
@@ -46,12 +50,7 @@ function Header({ type, menu }) {
 					</li>
 				</ul>
 
-				<FontAwesomeIcon
-					icon={faBars}
-					onClick={() => {
-						menu.current.toggle();
-					}}
-				/>
+				<FontAwesomeIcon icon={faBars} onClick={() => setMenuOpen(!menuOpen)} />
 			</header>
 		</>
 	);

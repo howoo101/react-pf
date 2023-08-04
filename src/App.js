@@ -16,12 +16,13 @@ import Youtube from './components/sub/Youtube';
 
 import './scss/style.scss';
 import Main from './components/main/Main';
-import { useCallback, useEffect, useRef } from 'react';
-import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { setYoutube, setMembers } from './redux/action';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { useRef } from 'react';
 
 function App() {
+	const queryClient = new QueryClient();
 	const menu = useRef(null);
 	const dispatch = useDispatch();
 
@@ -50,7 +51,7 @@ function App() {
 	}, [fetchYoutube, fetchMembers]);
 
 	return (
-		<>
+		<QueryClientProvider client={queryClient}>
 			<Switch>
 				<Route exact path='/' render={() => <Main menu={menu} />} />
 				<Route path='/' render={() => <Header type={'sub'} menu={menu} />} />
@@ -64,7 +65,8 @@ function App() {
 			<Route path='/member' component={Member} />
 			<Footer />
 			<Menu ref={menu} />
-		</>
+			<ReactQueryDevtools />
+		</QueryClientProvider>
 	);
 }
 

@@ -2,14 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { HashRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from './redux/store';
+
+import { GlobalProvider } from './hooks/useGlobalContext';
 
 ReactDOM.render(
 	<HashRouter>
-		<Provider store={store}>
+		<GlobalProvider>
 			<App />
-		</Provider>
+		</GlobalProvider>
+
 	</HashRouter>,
 	document.getElementById('root')
 );

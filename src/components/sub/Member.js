@@ -95,7 +95,7 @@ function Member() {
 		return errs;
 	};
 	return (
-		<Layout name={'Member'}>
+		<Layout name={'Members'}>
 			<button onClick={() => history.goBack()}>뒤로 가기</button>
 
 			<form onSubmit={formSubmit}>
