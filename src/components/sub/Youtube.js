@@ -1,4 +1,5 @@
 import Layout from '../common/Layout';
+
 import { useState, useRef } from 'react';
 
 import Modal from '../common/Modal';
@@ -6,6 +7,7 @@ import { useYoutubeQuery } from '../../hooks/useYoutuebeQuery';
 function Youtube() {
 	const modal = useRef(null);
 	const { data: Videoes, isSuccess } = useYoutubeQuery();
+
 	const [idx, setIdx] = useState(0);
 
 	return (
@@ -43,9 +45,11 @@ function Youtube() {
 			<Modal ref={modal}>
 				{isSuccess && Videoes.length > 0 && (
 					<iframe
+
 						title={isSuccess && Videoes[idx].id}
 						src={`https://www.youtube.com/embed/${isSuccess && Videoes[idx].snippet.resourceId.videoId}`}
 						frameborder='0'
+
 					></iframe>
 				)}
 			</Modal>

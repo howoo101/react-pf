@@ -19,6 +19,7 @@ function Department() {
 						</article>
 					);
 				})}
+
 		</Layout>
 	);
 }

@@ -1,11 +1,15 @@
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import LocalStorage from '../common/LocalStorage';
 
 function News() {
 	const storage = new LocalStorage();
 	const getLocalData = storage.getLocalData;
 
-	const [Posts] = useState(getLocalData());
+	const [Posts, setPosts] = useState(getLocalData());
+
+	useEffect(() => {
+		setPosts(Posts);
+	}, [Posts]);
 
 	return (
 		<section id='news' className='myScroll'>
